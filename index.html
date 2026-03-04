@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seabirdle</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="title-line"><span class="gull">🐦</span><h1>Seabirdle</h1><span class="gull">🌊</span></div>
+    <p class="subtitle">Identify the seabird by call &amp; silhouette</p>
+    <span class="date-badge" id="date-badge"></span>
+  </header>
+
+  <div id="loading-state" style="display:none"><div class="spinner"></div><br>Fetching today's bird…</div>
+
+  <div id="bird-preview-wrap" style="display:none">
+    <img id="bird-preview" src="" alt="Mystery seabird" />
+    <span id="blur-label"></span>
+    <div id="prog-bar"><div id="prog-fill"></div></div>
+  </div>
+
+  <div id="audio-section" style="display:none">
+    <span class="sec-label">Bird Call</span>
+    <button id="play-btn">▶</button>
+    <span class="plays-dots" id="plays-dots"></span>
+  </div>
+
+  <div id="guesses-section" style="display:none" role="list"></div>
+
+  <div id="input-section" style="display:none">
+    <input id="guess-input" type="text" placeholder="Type a seabird name…" autocomplete="off" />
+    <button id="submit-btn">→</button>
+    <div id="autocomplete" role="listbox" style="display:none"></div>
+  </div>
+
+  <div id="result-panel" role="region" aria-live="polite"></div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
