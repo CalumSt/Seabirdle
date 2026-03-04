@@ -88,4 +88,19 @@ function endGame(won) {
   resPanel.classList.add('show');
 }
 
+// Wire submit button and Enter key here — submitG must be defined first.
+// Remove the equivalent lines from ui.js if present.
+subBtn.addEventListener('click', submitG);
+gInput.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const its = [...acEl.querySelectorAll('.ac-item')];
+  if (S.acIdx >= 0 && its[S.acIdx]) {
+    gInput.value = its[S.acIdx].textContent;
+    acEl.style.display = 'none';
+    S.acIdx = -1;
+  } else {
+    submitG();
+  }
+});
+
 boot();
