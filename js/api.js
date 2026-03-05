@@ -11,15 +11,21 @@ async function loadBirdsJson() {
 // ── URL helpers — prefer local paths written by the GitHub Action ─────────────
 // S.daily is set in boot() to the full birds.json payload.
 function audioUrl() {
-  if (S.daily && S.daily.audioPath) return './' + S.daily.audioPath;
-  if (S.rec) return S.rec.file || `https://xeno-canto.org/${S.rec.id}/download`;
+  if (S.daily && S.daily.audioPath) {
+    const path = './' + S.daily.audioPath.replace(/\\/g,'/');
+    console.log('Using local audio:', path);
+    return path;
+  }
+  console.warn('No local audio available for today!');
   return null;
 }
 
 function imageUrl() {
   if (S.daily && S.daily.imagePath) {
-    let path = S.daily.imagePath.replace(/\\/g, '/');
+    const path = S.daily.imagePath.replace(/\\/g,'/');
+    console.log('Using local image:', path);
     return path.startsWith('http') ? path : './' + path;
   }
-  return S.bird ? S.bird.image : null;
+  console.warn('No local image available for today!');
+  return null;
 }

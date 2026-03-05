@@ -31,9 +31,8 @@ playBtn.addEventListener('click', () => {
     if (aud && !aud.paused) { aud.pause(); aud.currentTime = 0; playBtn.textContent = '▶'; playBtn.classList.remove('playing'); return; }
     if (!aud) {
         aud = new Audio(audioUrl());
-        aud.crossOrigin = 'anonymous';
         aud.addEventListener('ended', () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); });
-        aud.addEventListener('error', () => toast('Audio load failed — check CORS or key'));
+        aud.addEventListener('error', () => toast('Audio load failed'));
     } else { aud.src = audioUrl(); aud.currentTime = 0; }
     S.plays--; renderP();
     playBtn.textContent = '⏹'; playBtn.classList.add('playing');

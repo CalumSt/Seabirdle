@@ -1,12 +1,6 @@
 // js/state.js
 // App state and determinism helpers.
 
-// ── Key storage ───────────────────────────────────────────────────────────────
-// Falls back to in-memory if localStorage is unavailable (e.g. Claude artifact preview).
-const getKey  = () => { try { return localStorage.getItem('xc_key') || ''; } catch(_) { return _memKey; } };
-const saveKey = k  => { k = k.trim(); try { localStorage.setItem('xc_key', k); } catch(_) { _memKey = k; } };
-let _memKey = '';
-
 // ── Daily determinism ─────────────────────────────────────────────────────────
 const dailyBirdIdx = () => hash(todayStr()) % BIRDS.length;
 const dailyRecIdx  = (n) => hash(todayStr() + 'rec') % n;
