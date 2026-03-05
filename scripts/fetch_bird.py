@@ -90,12 +90,21 @@ def main():
     else:
         print("  WARNING: no recording found — birds.json will have null recording", file=sys.stderr)
 
+        
+
     BIRDS_OUTPUT.write_text(
         json.dumps({"date": today, "name": name, "genus": genus,
                     "species": species, "recording": rec}, indent=2),
         encoding="utf-8"
     )
     print(f"  Written {BIRDS_OUTPUT}")
+
+    if rec:
+        audio_url = rec["file"]
+        audio_dir = REPO_ROOT / "audio"
+        audio_dir.mkdir(exist_ok=True)
+        audio_path = audio_dir / "today.mp3"
+        urllib.request.urlretrieve(audio_url, audio_path)
 
 
 if __name__ == "__main__":
