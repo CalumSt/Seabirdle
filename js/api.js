@@ -11,13 +11,8 @@ async function loadBirdsJson() {
 // ── URL helpers — prefer local paths written by the GitHub Action ─────────────
 // S.daily is set in boot() to the full birds.json payload.
 function audioUrl() {
-  if (S.daily && S.daily.audioPath) {
-    const path = './' + S.daily.audioPath.replace(/\\/g,'/');
-    console.log('Using local audio:', path);
-    return path;
-  }
-  console.warn('No local audio available for today!');
-  return null;
+  // Always use local audio downloaded by GitHub Action
+  return './audio/today.mp3';
 }
 
 function imageUrl() {
