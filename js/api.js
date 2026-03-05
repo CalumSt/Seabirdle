@@ -21,11 +21,11 @@ function audioUrl() {
 }
 
 function imageUrl() {
-  if (S.daily && S.daily.imagePath) {
-    const path = S.daily.imagePath.replace(/\\/g,'/');
+  if (S.bird && S.bird.image) {
+    const path = S.bird.image.replace(/\\/g,'/');
     console.log('Using local image:', path);
     return path.startsWith('http') ? path : './' + path;
   }
-  console.warn('No local image available for today!');
+  console.warn('No image available for today!');
   return null;
 }
