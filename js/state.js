@@ -13,8 +13,9 @@ const dailyRecIdx  = (n) => hash(todayStr() + 'rec') % n;
 
 // ── Mutable game state ────────────────────────────────────────────────────────
 let S = {
-  bird:    null,   // BIRDS entry
-  rec:     null,   // xeno-canto recording object (or null if using birds.json)
+  bird:    null,   // BIRDS entry from birds_list.json
+  rec:     null,   // xeno-canto recording object
+  daily:   null,   // full birds.json payload — holds audioPath / imagePath
   guesses: [],     // [{name, ok}]
   plays:   MAX_P,
   over:    false,

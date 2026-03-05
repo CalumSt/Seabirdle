@@ -1,25 +1,30 @@
 #!/usr/bin/env python3
 """
 scripts/fetch_bird.py
-Runs nightly via GitHub Actions. Reads birds_list.json as the single source
-of truth, picks today's bird using the same deterministic hash as the JS
-client, fetches a quality:A call recording from xeno-canto, and writes
-birds.json.
+Runs nightly via GitHub Actions. Reads birds_list.json, picks today's bird,
+fetches a xeno-canto recording, downloads the audio and image locally, and
+writes birds.json with local paths so the browser never makes cross-origin
+requests at runtime.
 
 Requires:  env var XC_KEY  (set as GitHub Secret: XC_API_KEY)
 """
 
-import os, json, datetime, urllib.request, urllib.parse, sys, pathlib
+import os, json, datetime, urllib.request, urllib.parse, urllib.error, sys, pathlib, re
 
-REPO_ROOT    = pathlib.Path(__file__).parent.parent
+REPO_ROOT    = pathlib.Path(__file__).resolve().parent.parent
 BIRDS_LIST   = REPO_ROOT / "birds_list.json"
 BIRDS_OUTPUT = REPO_ROOT / "birds.json"
+AUDIO_DIR    = REPO_ROOT / "audio"
+IMG_DIR      = REPO_ROOT / "img" / "daily"
 XC_BASE      = "https://xeno-canto.org/api/3/recordings"
+WM_USER_AGENT = "Seabirdle/1.0 (https://github.com/your-username/seabirdle; your@email.com) Python/3"
+
+AUDIO_DIR.mkdir(exist_ok=True)
+IMG_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# ── Hash — replicates js/utils.js::hash() exactly ────────────────────────────
+# ── Hash — mirrors js/utils.js::hash() exactly ───────────────────────────────
 def js_hash(s: str) -> int:
-    """Mirrors: let h=0; for each char: h=(Math.imul(31,h)+charCode)|0; return Math.abs(h)"""
     h = 0
     for ch in s:
         product = (31 * h) & 0xFFFFFFFF
@@ -30,34 +35,27 @@ def js_hash(s: str) -> int:
             h -= 0x100000000
     return abs(h)
 
-
 def today_str() -> str:
     return datetime.date.today().isoformat()
 
-
 def daily_bird_idx(n: int) -> int:
     return js_hash(today_str()) % n
-
 
 def daily_rec_idx(n: int) -> int:
     return js_hash(today_str() + "rec") % n
 
 
-# ── XC fetch ──────────────────────────────────────────────────────────────────
+# ── xeno-canto ────────────────────────────────────────────────────────────────
 def fetch_recording(genus: str, species: str, key: str) -> dict | None:
-    for extra in ["+type:song", ""]:
+    for extra in ["+type:call", ""]:
         query = f"gen:{genus}+sp:{species}+q:A{extra}"
-        url = f"{XC_BASE}?query={query}&key={key}&per_page=20"
+        url   = f"{XC_BASE}?query={query}&key={key}&per_page=20"
         try:
-            print(f"  Fetching XC with query: {query!r}")
-            print("URL:", url)
-
+            print(f"  XC query: {query!r}")
             with urllib.request.urlopen(url, timeout=15) as r:
                 data = json.load(r)
-
-            print("numRecordings:", data.get("numRecordings"))
-
             recs = data.get("recordings", [])
+            print(f"  Found {len(recs)} recordings")
             if recs:
                 return recs[daily_rec_idx(len(recs))]
         except Exception as e:
@@ -65,6 +63,7 @@ def fetch_recording(genus: str, species: str, key: str) -> dict | None:
     return None
 
 
+# ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     key = os.environ.get("XC_KEY", "").strip()
     if not key:
@@ -81,30 +80,35 @@ def main():
     idx   = daily_bird_idx(len(birds))
     bird  = birds[idx]
     name, genus, species = bird["name"], bird["genus"], bird["species"]
+    print(f"Today ({today}): {name} ({genus} {species}), index {idx}/{len(birds)}\n")
 
-    print(f"Today ({today}): {name} ({genus} {species}), index {idx}/{len(birds)}")
-
+    # Recording
     rec = fetch_recording(genus, species, key)
     if rec:
         print(f"  Recording: XC{rec.get('id')} by {rec.get('rec')} [{rec.get('lic')}]")
     else:
-        print("  WARNING: no recording found — birds.json will have null recording", file=sys.stderr)
+        print("  WARNING: no recording found", file=sys.stderr)
 
-        
+    # Download audio
+    audio_path = download_audio(rec) if rec else None
+    if not audio_path:
+        print("  WARNING: audio not saved", file=sys.stderr)
+
+    output = {
+        "date":      today,
+        "name":      name,
+        "genus":     genus,
+        "species":   species,
+        "recording": rec,
+        "audioPath": audio_path,   # "audio/today.mp3" or null
+
+    }
 
     BIRDS_OUTPUT.write_text(
-        json.dumps({"date": today, "name": name, "genus": genus,
-                    "species": species, "recording": rec}, indent=2),
+        json.dumps(output, indent=2, ensure_ascii=False),
         encoding="utf-8"
     )
-    print(f"  Written {BIRDS_OUTPUT}")
-
-    if rec:
-        audio_url = rec["file"]
-        audio_dir = REPO_ROOT / "audio"
-        audio_dir.mkdir(exist_ok=True)
-        audio_path = audio_dir / "today.mp3"
-        urllib.request.urlretrieve(audio_url, audio_path)
+    print(f"\n  Written {BIRDS_OUTPUT.relative_to(REPO_ROOT)}")
 
 
 if __name__ == "__main__":
