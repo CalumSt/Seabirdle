@@ -18,8 +18,8 @@ function audioUrl() {
 
 function imageUrl() {
   if (S.daily && S.daily.imagePath) {
-    // Local relative path vs remote URL
-    return S.daily.imagePath.startsWith('http') ? S.daily.imagePath : './' + S.daily.imagePath;
+    let path = S.daily.imagePath.replace(/\\/g, '/');
+    return path.startsWith('http') ? path : './' + path;
   }
   return S.bird ? S.bird.image : null;
 }

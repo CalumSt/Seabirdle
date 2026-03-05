@@ -5,21 +5,20 @@ async function boot() {
   loadEl.style.display = 'block';
 
   try {
-    // Fetch bird list and today's daily data in parallel
     const [list, daily] = await Promise.all([
       fetch('./birds_list.json').then(r => { if (!r.ok) throw new Error('birds_list.json ' + r.status); return r.json(); }),
       loadBirdsJson(),
     ]);
 
-    // Populate globals from birds_list.json (defined as let in data.js)
     BIRDS     = list;
     ALL_NAMES = list.map(b => b.name);
 
     if (daily.date !== todayStr() || !daily.name)
       throw new Error('birds.json is stale');
 
-    S.bird = BIRDS.find(b => b.name === daily.name) || BIRDS[dailyBirdIdx()];
-    S.rec  = daily.recording || null;
+    S.bird  = BIRDS.find(b => b.name === daily.name) || BIRDS[dailyBirdIdx()];
+    S.rec   = daily.recording || null;
+    S.daily = daily;  // gives audioUrl() / imageUrl() access to local paths
 
     loadEl.style.display = 'none';
     startGame();
@@ -32,7 +31,7 @@ async function boot() {
 }
 
 function startGame() {
-  imgEl.src = S.bird.image;
+  imgEl.src = imageUrl();
   imgEl.style.filter = ''; imgEl.style.transform = '';
   setBlur();
   previewWrap.style.display = 'block';
@@ -81,15 +80,13 @@ function endGame(won) {
       : 'The answer was…'}</div>
     <div id="res-name">${won ? '🐦' : '💀'} ${esc(b.name)}</div>
     <div id="res-latin"><em>${esc(b.genus)} ${esc(b.species)}</em></div>
-    <img id="res-img" src="${b.image}" alt="${esc(b.name)}" onerror="this.style.display='none'" />
+    <img id="res-img" src="${imageUrl()}" alt="${esc(b.name)}" onerror="this.style.display='none'" />
     <p id="res-fact">${esc(b.fact)}</p>
     ${r ? `<p id="res-credit">Recording by ${esc(r.rec)} · xeno-canto XC${esc(r.id)} · ${esc(r.lic || 'CC')}</p>` : ''}
   `;
   resPanel.classList.add('show');
 }
 
-// Wire submit button and Enter key here — submitG must be defined first.
-// Remove the equivalent lines from ui.js if present.
 subBtn.addEventListener('click', submitG);
 gInput.addEventListener('keydown', e => {
   if (e.key !== 'Enter') return;
