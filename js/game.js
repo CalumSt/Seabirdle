@@ -20,6 +20,18 @@ async function boot() {
     S.rec   = daily.recording || null;
     S.daily = daily;  // gives audioUrl() / imageUrl() access to local paths
 
+    // Check if already played today
+    const lastPlay = localStorage.getItem('lastPlayDate');
+    if (lastPlay === todayStr()) {
+      loadEl.style.display = 'none';
+      resPanel.innerHTML = `
+        <div id="res-title">Already played today!</div>
+        <div id="res-sub">Come back tomorrow for a new bird.</div>
+      `;
+      resPanel.classList.add('show');
+      return;
+    }
+
     loadEl.style.display = 'none';
     startGame();
 
@@ -71,6 +83,7 @@ function submitG() {
 function endGame(won) {
   S.over = true;
   gInput.disabled = true; subBtn.disabled = true; setBlur();
+  localStorage.setItem('lastPlayDate', todayStr());
   const b = S.bird, r = S.rec;
 
   resPanel.innerHTML = `
