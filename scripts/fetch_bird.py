@@ -45,12 +45,18 @@ def daily_rec_idx(n: int) -> int:
 
 # ── XC fetch ──────────────────────────────────────────────────────────────────
 def fetch_recording(genus: str, species: str, key: str) -> dict | None:
-    for extra in ["+type:call", ""]:
+    for extra in ["+type:song", ""]:
         query = f"gen:{genus}+sp:{species}+q:A{extra}"
-        url   = f"{XC_BASE}?query={urllib.parse.quote(query)}&key={urllib.parse.quote(key)}&per_page=20"
+        url = f"{XC_BASE}?query={query}&key={key}&per_page=20"
         try:
+            print(f"  Fetching XC with query: {query!r}")
+            print("URL:", url)
+
             with urllib.request.urlopen(url, timeout=15) as r:
                 data = json.load(r)
+
+            print("numRecordings:", data.get("numRecordings"))
+
             recs = data.get("recordings", [])
             if recs:
                 return recs[daily_rec_idx(len(recs))]

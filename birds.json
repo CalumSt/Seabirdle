@@ -1,7 +1,56 @@
 {
-  "date": "2026-03-04",
-  "name": "Black Guillemot",
-  "genus": "Cepphus",
-  "species": "grylle",
-  "recording": null
+  "date": "2026-03-05",
+  "name": "Little Auk",
+  "genus": "Alle",
+  "species": "alle",
+  "recording": {
+    "id": "1003579",
+    "gen": "Alle",
+    "sp": "alle",
+    "ssp": "",
+    "grp": "birds",
+    "en": "Little Auk",
+    "rec": "Stein \u00d8. Nilsen",
+    "cnt": "Norway",
+    "loc": "Bj\u00f8rndalen, Longyearbyen",
+    "lat": "78.247",
+    "lon": "15.392",
+    "alt": "120",
+    "type": "flight call, song",
+    "sex": "uncertain",
+    "stage": "adult",
+    "method": "field recording",
+    "url": "//xeno-canto.org/1003579",
+    "file": "https://xeno-canto.org/1003579/download",
+    "file-name": "XC1003579-20180604_001-ALKEKONGE-little-auk-SN\u00d8SPURV-vestpynten_TELINGA-0335.wav",
+    "sono": {
+      "small": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/ffts/XC1003579-small.png",
+      "med": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/ffts/XC1003579-med.png",
+      "large": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/ffts/XC1003579-large.png",
+      "full": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/ffts/XC1003579-full.png"
+    },
+    "osci": {
+      "small": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/wave/XC1003579-small.png",
+      "med": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/wave/XC1003579-med.png",
+      "large": "//xeno-canto.org/sounds/uploaded/TLPLNAINFU/wave/XC1003579-large.png"
+    },
+    "lic": "//creativecommons.org/licenses/by-nc-sa/4.0/",
+    "q": "A",
+    "length": "2:54",
+    "time": "01:00",
+    "date": "2018-06-04",
+    "uploaded": "2025-06-03",
+    "also": [
+      "Plectrophenax nivalis"
+    ],
+    "rmk": "RECORDED BELOW BREEDING COLONY",
+    "animal-seen": "yes",
+    "playback-used": "no",
+    "temp": "",
+    "regnr": "",
+    "auto": "no",
+    "dvc": "Zoom H6",
+    "mic": "Telinga MK2",
+    "smp": "48000"
+  }
 }
