@@ -1,5 +1,4 @@
 // js/game.js
-// Game flow: boot → startGame → submitG → endGame
 
 async function boot() {
   loadEl.style.display = 'block';
@@ -18,21 +17,20 @@ async function boot() {
 
     S.bird  = BIRDS.find(b => b.name === daily.name) || BIRDS[dailyBirdIdx()];
     S.rec   = daily.recording || null;
-    S.daily = daily;  // gives audioUrl() / imageUrl() access to local paths
+    S.daily = daily;
 
-    // Check if already played today
-    const lastPlay = localStorage.getItem('lastPlayDate');
-    if (lastPlay === todayStr()) {
-      loadEl.style.display = 'none';
-      resPanel.innerHTML = `
-        <div id="res-title">Already played today!</div>
-        <div id="res-sub">Come back tomorrow for a new bird.</div>
-      `;
-      resPanel.classList.add('show');
+    loadEl.style.display = 'none';
+
+    // Already played today — show result directly, skip game
+    if (localStorage.getItem('lastPlayDate') === todayStr()) {
+      S.over = true;
+      setBlur();
+      previewWrap.style.display = 'block';
+      imgEl.src = imageUrl();
+      showResult(false);   // won=false renders a neutral "already played" panel
       return;
     }
 
-    loadEl.style.display = 'none';
     startGame();
 
   } catch(err) {
@@ -84,14 +82,21 @@ function endGame(won) {
   S.over = true;
   gInput.disabled = true; subBtn.disabled = true; setBlur();
   localStorage.setItem('lastPlayDate', todayStr());
+  showResult(won);
+}
+
+function showResult(won) {
   const b = S.bird, r = S.rec;
+  const alreadyPlayed = !S.guesses.length;
 
   resPanel.innerHTML = `
-    <div id="res-title">${won ? 'Correct!' : 'Better luck next time'}</div>
-    <div id="res-sub">${won
-      ? `Found in ${S.guesses.length} guess${S.guesses.length === 1 ? '' : 'es'}`
-      : 'The answer was…'}</div>
-    <div id="res-name">${won ? '🐦' : '💀'} ${esc(b.name)}</div>
+    <div id="res-title">${alreadyPlayed ? 'Already played today' : won ? 'Correct!' : 'Better luck next time'}</div>
+    <div id="res-sub">${alreadyPlayed
+      ? 'Come back tomorrow for a new bird.'
+      : won
+        ? `Found in ${S.guesses.length} guess${S.guesses.length === 1 ? '' : 'es'}`
+        : 'The answer was…'}</div>
+    <div id="res-name">🐦 ${esc(b.name)}</div>
     <div id="res-latin"><em>${esc(b.genus)} ${esc(b.species)}</em></div>
     <img id="res-img" src="${imageUrl()}" alt="${esc(b.name)}" onerror="this.style.display='none'" />
     <p id="res-fact">${esc(b.fact)}</p>
