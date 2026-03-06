@@ -1,0 +1,15 @@
+{
+  "date": "__TODAY__",
+  "name": "Atlantic Puffin",
+  "genus": "Fratercula",
+  "species": "arctica",
+  "recording": {
+    "id": "123456",
+    "rec": "Test Recorder",
+    "cnt": "United Kingdom",
+    "lic": "CC BY-NC-SA 4.0",
+    "file": "https://example.com/test.mp3"
+  },
+  "audioPath": "audio/today.mp3",
+  "imagePath": "img/daily/today.jpg"
+}
