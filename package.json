@@ -1,0 +1,9 @@
+{
+  "name": "seabirdle",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "cypress": "^13.0.0",
+    "serve": "^14.0.0"
+  }
+}

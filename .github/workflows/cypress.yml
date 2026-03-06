@@ -14,12 +14,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - run: python scripts/update_cypress_fixture.py
-      - run: npm ci
+      - name: Install dependencies
+        run: npm install
 
-      # Serve the site locally, run Cypress against it
+      - name: Update Cypress fixture date
+        run: python scripts/update_cypress_fixture.py
+
       - name: Serve and test
         uses: cypress-io/github-action@v6
         with:
@@ -28,3 +29,4 @@ jobs:
           wait-on-timeout: 15
           browser: chrome
           headless: true
+          install: false
