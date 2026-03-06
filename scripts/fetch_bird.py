@@ -47,7 +47,7 @@ def daily_rec_idx(n: int) -> int:
 
 # ── xeno-canto ────────────────────────────────────────────────────────────────
 def fetch_recording(genus: str, species: str, key: str) -> dict | None:
-    for extra in ["+type:call", ""]:
+    for extra in ["+type:song", ""]:
         query = f"gen:{genus}+sp:{species}+q:A{extra}"
         url   = f"{XC_BASE}?query={query}&key={key}&per_page=20"
         try:
@@ -61,6 +61,120 @@ def fetch_recording(genus: str, species: str, key: str) -> dict | None:
         except Exception as e:
             print(f"  XC attempt failed ({extra!r}): {e}", file=sys.stderr)
     return None
+
+
+# ── Download helpers ──────────────────────────────────────────────────────────
+def download(url: str, dest: pathlib.Path, ua: str | None = None) -> bool:
+    headers = {"User-Agent": ua or "Seabirdle/1.0"}
+    try:
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=20) as r:
+            dest.write_bytes(r.read())
+        return True
+    except urllib.error.HTTPError as e:
+        print(f"  HTTP {e.code} downloading {url}", file=sys.stderr)
+        return False
+    except Exception as e:
+        print(f"  Failed downloading {url}: {e}", file=sys.stderr)
+        return False
+
+
+def download_audio(rec: dict) -> str | None:
+    """Download XC recording. Returns relative path string or None."""
+    xc_id    = rec.get("id", "unknown")
+    audio_url = rec.get("file") or f"https://xeno-canto.org/{xc_id}/download"
+    dest     = AUDIO_DIR / "today.mp3"
+    print(f"  Downloading audio XC{xc_id}…")
+    if download(audio_url, dest):
+        print(f"  Audio saved → {dest.relative_to(REPO_ROOT)}")
+        return "audio/today.mp3"
+    return None
+
+
+def get_inaturalist_photo_url(genus: str, species: str) -> str | None:
+    """Fetch a photo URL from iNaturalist observations.
+    Uses /v1/observations (not /v1/taxa) so we can filter by:
+      - quality_grade=research  (community-verified ID)
+      - order_by=votes          (most popular/faved first)
+      - iconic_taxa=Aves        (birds only)
+    Falls back to /v1/taxa default_photo if no observations found.
+    """
+    scientific = f"{genus} {species}"
+
+    # ── Primary: research-grade observations ordered by votes ────────────────
+    params = urllib.parse.urlencode({
+        "taxon_name":   scientific,
+        "quality_grade": "research",
+        "iconic_taxa":  "Aves",
+        "photos":       "true",
+        "order_by":     "votes",
+        "per_page":     "10",
+    })
+    obs_url = f"https://api.inaturalist.org/v1/observations?{params}"
+    try:
+        req = urllib.request.Request(obs_url, headers={"User-Agent": WM_USER_AGENT})
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.load(r)
+        results = data.get("results", [])
+        for obs in results:
+            photos = obs.get("photos", [])
+            if not photos:
+                continue
+            raw = photos[0].get("url", "")
+            if not raw:
+                continue
+            # iNaturalist photo URLs end in /square.jpg — swap to medium
+            url  = raw.replace("/square.", "/medium.")
+            attr = photos[0].get("attribution", "")
+            print(f"  iNaturalist obs: {url}  [{attr}]")
+            return url
+    except Exception as e:
+        print(f"  iNaturalist observations error: {e}", file=sys.stderr)
+
+    # ── Fallback: taxa default_photo (no quality filter) ─────────────────────
+    print(f"  Falling back to taxa API for {scientific!r}")
+    taxa_params = urllib.parse.urlencode({
+        "q":            scientific,
+        "rank":         "species",
+        "iconic_taxa":  "Aves",
+        "per_page":     "3",
+    })
+    try:
+        req = urllib.request.Request(
+            f"https://api.inaturalist.org/v1/taxa?{taxa_params}",
+            headers={"User-Agent": WM_USER_AGENT}
+        )
+        with urllib.request.urlopen(req, timeout=15) as r:
+            data = json.load(r)
+        results = data.get("results", [])
+        if not results:
+            print(f"  iNaturalist: no taxa results for {scientific!r}", file=sys.stderr)
+            return None
+        bird  = next((r for r in results if "Aves" in (r.get("ancestry") or "")), results[0])
+        photo = bird.get("default_photo", {})
+        url   = photo.get("medium_url")
+        print(f"  iNaturalist taxa fallback: {url}  [{photo.get('attribution', '')}]")
+        return url
+    except Exception as e:
+        print(f"  iNaturalist taxa error: {e}", file=sys.stderr)
+        return None
+
+
+
+def download_image(genus: str, species: str) -> str | None:
+    """Fetch image from iNaturalist and save locally. Returns relative path or None."""
+    direct_url = get_inaturalist_photo_url(genus, species)
+    if not direct_url:
+        return None
+    ext  = pathlib.Path(urllib.parse.urlparse(direct_url).path).suffix or ".jpg"
+    dest = IMG_DIR / f"today{ext}"
+    print(f"  Downloading image…")
+    if download(direct_url, dest):
+        rel = str(dest.relative_to(REPO_ROOT)).replace("\\", "/")
+        print(f"  Image saved → {rel}")
+        return rel
+    return None
+
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -94,6 +208,12 @@ def main():
     if not audio_path:
         print("  WARNING: audio not saved", file=sys.stderr)
 
+    # Download image
+    image_path = download_image(genus, species)
+    if not image_path:
+        print("  WARNING: image not saved — will fall back to birds_list.json URL", file=sys.stderr)
+        image_path = bird.get("image")  # keep remote URL as fallback
+
     output = {
         "date":      today,
         "name":      name,
@@ -101,7 +221,7 @@ def main():
         "species":   species,
         "recording": rec,
         "audioPath": audio_path,   # "audio/today.mp3" or null
-
+        "imagePath": image_path,   # "img/daily/today.jpg" or fallback URL
     }
 
     BIRDS_OUTPUT.write_text(
