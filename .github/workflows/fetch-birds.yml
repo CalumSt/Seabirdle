@@ -31,5 +31,6 @@ jobs:
           git config user.name  "Seabirdle Bot"
           git add birds.json
           git add audio/today.mp3
+          git add audio/today.jpg
           git diff --staged --quiet && echo "No change" || git commit -m "chore: daily bird $(date -u +%Y-%m-%d)"
           git push

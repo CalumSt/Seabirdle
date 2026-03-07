@@ -7,7 +7,12 @@ async function loadBirdsJson() {
 }
 
 function audioUrl() {
-  return './audio/today.mp3';
+  // Use the path recorded by the Action (handles .wav, .ogg, etc.)
+  if (S.daily && S.daily.audioPath) {
+    const p = S.daily.audioPath.replace(/\\/g, '/');
+    return p.startsWith('http') ? p : './' + p;
+  }
+  return null;
 }
 
 function imageUrl() {

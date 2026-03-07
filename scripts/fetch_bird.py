@@ -80,14 +80,35 @@ def download(url: str, dest: pathlib.Path, ua: str | None = None) -> bool:
 
 
 def download_audio(rec: dict) -> str | None:
-    """Download XC recording. Returns relative path string or None."""
-    xc_id    = rec.get("id", "unknown")
+    """Download XC recording. Detects actual file extension from Content-Type
+    or URL so WAV files are saved correctly. Returns relative path or None."""
+    xc_id     = rec.get("id", "unknown")
     audio_url = rec.get("file") or f"https://xeno-canto.org/{xc_id}/download"
-    dest     = AUDIO_DIR / "today.mp3"
     print(f"  Downloading audio XC{xc_id}…")
+
+    # Clean up any previous today.* files so stale formats don't linger
+    for old_file in AUDIO_DIR.glob("today.*"):
+        old_file.unlink()
+
+    # HEAD request to resolve redirects and get Content-Type before downloading
+    ext = ".mp3"  # default
+    try:
+        req = urllib.request.Request(audio_url, method="HEAD", headers={"User-Agent": "Seabirdle/1.0"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            ct = r.headers.get("Content-Type", "")
+            final_url = r.url
+        if "wav" in ct or final_url.endswith(".wav"):
+            ext = ".wav"
+        elif "ogg" in ct or final_url.endswith(".ogg"):
+            ext = ".ogg"
+    except Exception as e:
+        print(f"  HEAD request failed, defaulting to .mp3: {e}", file=sys.stderr)
+
+    dest = AUDIO_DIR / f"today{ext}"
     if download(audio_url, dest):
-        print(f"  Audio saved → {dest.relative_to(REPO_ROOT)}")
-        return "audio/today.mp3"
+        rel = str(dest.relative_to(REPO_ROOT)).replace("\\", "/")
+        print(f"  Audio saved → {rel}")
+        return rel
     return None
 
 
@@ -158,7 +179,6 @@ def get_inaturalist_photo_url(genus: str, species: str) -> str | None:
     except Exception as e:
         print(f"  iNaturalist taxa error: {e}", file=sys.stderr)
         return None
-
 
 
 def download_image(genus: str, species: str) -> str | None:

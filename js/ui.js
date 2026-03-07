@@ -31,13 +31,19 @@ playBtn.addEventListener('click', () => {
     if (aud && !aud.paused) { aud.pause(); aud.currentTime = 0; playBtn.textContent = '▶'; playBtn.classList.remove('playing'); return; }
     if (!aud) {
         aud = new Audio(audioUrl());
+        aud.crossOrigin = 'anonymous';
         aud.addEventListener('ended', () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); });
-        aud.addEventListener('error', () => toast('Audio load failed'));
+        aud.addEventListener('error', () => toast('Audio load failed — check CORS or key'));
     } else { aud.src = audioUrl(); aud.currentTime = 0; }
-    S.plays--; renderP();
     playBtn.textContent = '⏹'; playBtn.classList.add('playing');
-    aud.play().catch(() => toast('Autoplay blocked — click again'));
-    if (S.plays === 0) setTimeout(() => { playBtn.disabled = true; }, 200);
+    aud.play().then(() => {
+        // Only deduct a play if audio actually started
+        S.plays--; renderP();
+        if (S.plays === 0) playBtn.disabled = true;
+    }).catch(() => {
+        playBtn.textContent = '▶'; playBtn.classList.remove('playing');
+        toast('Autoplay blocked — click again');
+    });
 });
 function renderP() { dotEl.textContent = '●'.repeat(S.plays) + '○'.repeat(MAX_P - S.plays); }
 
