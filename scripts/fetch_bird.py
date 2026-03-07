@@ -112,7 +112,7 @@ def download_audio(rec: dict) -> str | None:
     return None
 
 
-def get_inaturalist_photo_url(genus: str, species: str) -> str | None:
+def get_inaturalist_photo_url(genus: str, species: str) -> tuple[str | None, str | None]:
     """Fetch a photo URL from iNaturalist observations.
     Uses /v1/observations (not /v1/taxa) so we can filter by:
       - quality_grade=research  (community-verified ID)
@@ -148,7 +148,7 @@ def get_inaturalist_photo_url(genus: str, species: str) -> str | None:
             url  = raw.replace("/square.", "/medium.")
             attr = photos[0].get("attribution", "")
             print(f"  iNaturalist obs: {url}  [{attr}]")
-            return url
+            return url, attr
     except Exception as e:
         print(f"  iNaturalist observations error: {e}", file=sys.stderr)
 
@@ -170,22 +170,23 @@ def get_inaturalist_photo_url(genus: str, species: str) -> str | None:
         results = data.get("results", [])
         if not results:
             print(f"  iNaturalist: no taxa results for {scientific!r}", file=sys.stderr)
-            return None
+            return None, None
         bird  = next((r for r in results if "Aves" in (r.get("ancestry") or "")), results[0])
         photo = bird.get("default_photo", {})
         url   = photo.get("medium_url")
-        print(f"  iNaturalist taxa fallback: {url}  [{photo.get('attribution', '')}]")
-        return url
+        attr  = photo.get("attribution", "")
+        print(f"  iNaturalist taxa fallback: {url}  [{attr}]")
+        return url, attr
     except Exception as e:
         print(f"  iNaturalist taxa error: {e}", file=sys.stderr)
-        return None
+        return None, None
 
 
-def download_image(genus: str, species: str) -> str | None:
-    """Fetch image from iNaturalist and save locally. Returns relative path or None."""
-    direct_url = get_inaturalist_photo_url(genus, species)
+def download_image(genus: str, species: str) -> tuple[str | None, str | None]:
+    """Fetch image from iNaturalist and save locally. Returns (relative_path, attribution) or (None, None)."""
+    direct_url, attribution = get_inaturalist_photo_url(genus, species)
     if not direct_url:
-        return None
+        return None, None
     # Clean up any previous today.* so stale formats don't accumulate
     for old_file in IMG_DIR.glob("today.*"):
         old_file.unlink()
@@ -195,8 +196,8 @@ def download_image(genus: str, species: str) -> str | None:
     if download(direct_url, dest):
         rel = str(dest.relative_to(REPO_ROOT)).replace("\\", "/")
         print(f"  Image saved → {rel}")
-        return rel
-    return None
+        return rel, attribution
+    return None, None
 
 
 
@@ -232,7 +233,7 @@ def main():
         print("  WARNING: audio not saved", file=sys.stderr)
 
     # Download image
-    image_path = download_image(genus, species)
+    image_path, image_attr = download_image(genus, species)
     if not image_path:
         print("  WARNING: image not saved — will fall back to birds_list.json URL", file=sys.stderr)
         image_path = bird.get("image")  # keep remote URL as fallback
@@ -243,8 +244,9 @@ def main():
         "genus":     genus,
         "species":   species,
         "recording": rec,
-        "audioPath": audio_path,   # "audio/today.mp3" or null
-        "imagePath": image_path,   # "img/daily/today.jpg" or fallback URL
+        "audioPath":        audio_path,   # "audio/today.mp3" or null
+        "imagePath":        image_path,   # "img/daily/today.jpg" or fallback URL
+        "imageAttribution": image_attr,   # iNaturalist attribution string or null
     }
 
     BIRDS_OUTPUT.write_text(

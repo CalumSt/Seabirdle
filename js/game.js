@@ -13,8 +13,7 @@ async function boot() {
     ALL_NAMES = list.map(b => b.name);
 
     if (daily.date !== todayStr() || !daily.name)
-
-      throw new Error(`birds.json is stale (${daily.date} !== ${todayStr()})`);
+      throw new Error('birds.json is stale');
 
     S.bird  = BIRDS.find(b => b.name === daily.name) || BIRDS[dailyBirdIdx()];
     S.rec   = daily.recording || null;
@@ -101,7 +100,8 @@ function showResult(won) {
     <div id="res-latin"><em>${esc(b.genus)} ${esc(b.species)}</em></div>
     <img id="res-img" src="${imageUrl()}" alt="${esc(b.name)}" onerror="this.style.display='none'" />
     <p id="res-fact">${esc(b.fact)}</p>
-    ${r ? `<p id="res-credit">Recording by ${esc(r.rec)} · xeno-canto XC${esc(r.id)} · ${esc(r.lic || 'CC')}</p>` : ''}
+    ${r ? `<p id="res-credit">Recording: ${esc(r.rec)} · XC${esc(r.id)} · ${esc(r.lic || 'CC')}</p>` : ''}
+    ${S.daily && S.daily.imageAttribution ? `<p id="res-credit">Photo: ${esc(S.daily.imageAttribution)}</p>` : ''}
   `;
   resPanel.classList.add('show');
 }
