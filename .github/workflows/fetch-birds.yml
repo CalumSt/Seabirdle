@@ -1,13 +1,12 @@
-# .github/workflows/fetch-birds.yml
 name: Fetch daily bird
 
 on:
   schedule:
-    - cron: '0 0 * * *'   # midnight UTC — runs before anyone plays
-  workflow_dispatch:       # manual trigger from Actions tab
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 permissions:
-  contents: write          # needed to push birds.json
+  contents: write
 
 jobs:
   fetch:
@@ -20,17 +19,15 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Fetch XC recording
+      - name: Fetch recording, download audio + image
         env:
           XC_KEY: ${{ secrets.XC_API_KEY }}
         run: python scripts/fetch_bird.py
 
-      - name: Commit birds.json
+      - name: Commit assets
         run: |
           git config user.email "seabirdle-bot@users.noreply.github.com"
           git config user.name  "Seabirdle Bot"
-          git add birds.json
-          git add audio/today.mp3
-          git add audio/today.jpg
+          git add birds.json audio/today.* img/daily/today.*
           git diff --staged --quiet && echo "No change" || git commit -m "chore: daily bird $(date -u +%Y-%m-%d)"
           git push

@@ -186,6 +186,9 @@ def download_image(genus: str, species: str) -> str | None:
     direct_url = get_inaturalist_photo_url(genus, species)
     if not direct_url:
         return None
+    # Clean up any previous today.* so stale formats don't accumulate
+    for old_file in IMG_DIR.glob("today.*"):
+        old_file.unlink()
     ext  = pathlib.Path(urllib.parse.urlparse(direct_url).path).suffix or ".jpg"
     dest = IMG_DIR / f"today{ext}"
     print(f"  Downloading image…")
