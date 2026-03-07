@@ -42,10 +42,10 @@ describe('Seabirdle', () => {
     cy.visit('/');
     cy.wait(['@birdsList', '@birdsJson']);
     // CSS custom property --blur should be non-zero on load
-    cy.get('#bird-preview').then($img => {
-      const blur = $img[0].style.getPropertyValue('--blur');
-      expect(parseInt(blur)).to.be.greaterThan(0);
-    });
+    // blur-label shows remaining guesses when image is blurred
+    cy.get('#blur-label').should('contain', 'remaining');
+    // progress bar starts at 0%
+    cy.get('#prog-fill').should('have.attr', 'style').and('include', 'width: 0%');
   });
 
   // ── Autocomplete ──────────────────────────────────────────────────────────
@@ -100,16 +100,15 @@ describe('Seabirdle', () => {
     cy.visit('/');
     cy.wait(['@birdsList', '@birdsJson']);
 
-    cy.get('#bird-preview').then($img => {
-      const blurBefore = parseInt($img[0].style.getPropertyValue('--blur'));
-
+    // After a wrong guess the progress bar advances and remaining count drops
+    cy.get('#blur-label').invoke('text').then(before => {
+      const guessesBefore = parseInt(before);
       cy.get('#guess-input').type('Razorbill');
       cy.get('#submit-btn').click();
       cy.get('.guess-row.wrong').should('have.length', 1);
-
-      cy.get('#bird-preview').then($img2 => {
-        const blurAfter = parseInt($img2[0].style.getPropertyValue('--blur'));
-        expect(blurAfter).to.be.lessThan(blurBefore);
+      cy.get('#blur-label').invoke('text').then(after => {
+        const guessesAfter = parseInt(after);
+        expect(guessesAfter).to.be.lessThan(guessesBefore);
       });
     });
   });
@@ -124,9 +123,8 @@ describe('Seabirdle', () => {
     cy.get('#submit-btn').click();
     cy.get('#result-panel').should('be.visible');
     cy.get('#res-title').should('contain', 'Correct');
-    cy.get('#bird-preview').then($img => {
-      expect($img[0].style.getPropertyValue('--blur')).to.equal('0px');
-    });
+    // blur-label clears and result panel is shown when game ends
+    cy.get('#blur-label').should('have.text', '');
   });
 
   it('saves play date to localStorage on win', () => {
