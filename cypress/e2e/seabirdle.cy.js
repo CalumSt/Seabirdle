@@ -197,8 +197,12 @@ describe('Seabirdle', () => {
   it('play dot count decrements on play', () => {
     cy.visit('/');
     cy.wait(['@birdsList', '@birdsJson']);
+    // aud.play() returns a rejected promise in Cypress (no audio context).
+    // Stub it to resolve so the .then() branch in ui.js fires and S.plays decrements.
+    cy.window().then(win => {
+      cy.stub(win.HTMLMediaElement.prototype, 'play').resolves();
+    });
     cy.get('#plays-dots').invoke('text').then(before => {
-      // Count filled dots before
       const filled = (before.match(/●/g) || []).length;
       cy.get('#play-btn').click();
       cy.get('#plays-dots').invoke('text').then(after => {
