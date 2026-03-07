@@ -13,7 +13,8 @@ async function boot() {
     ALL_NAMES = list.map(b => b.name);
 
     if (daily.date !== todayStr() || !daily.name)
-      throw new Error('birds.json is stale');
+
+      throw new Error(`birds.json is stale (${daily.date} !== ${todayStr()})`);
 
     S.bird  = BIRDS.find(b => b.name === daily.name) || BIRDS[dailyBirdIdx()];
     S.rec   = daily.recording || null;
