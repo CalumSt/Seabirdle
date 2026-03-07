@@ -52,5 +52,6 @@
     "smp": "96000"
   },
   "audioPath": "audio/today.mp3",
-  "imagePath": "img/daily/today.jpg"
+  "imagePath": "img/daily/today.jpg",
+  "imageAttribution": "(c) Stergios Vasilis, some rights reserved (CC BY-NC-ND)"
 }
