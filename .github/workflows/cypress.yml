@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  cypress:
+  chrome:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,7 @@ jobs:
       - name: Update Cypress fixture date
         run: python scripts/update_cypress_fixture.py
 
-      - name: Serve and test
+      - name: Serve and test (Chrome)
         uses: cypress-io/github-action@v6
         with:
           start: npx serve . -l 5000
@@ -30,3 +30,29 @@ jobs:
           browser: chrome
           headless: true
           install: false
+
+  webkit:
+    runs-on: macos-latest   # free for public repos; required for WebKit
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright WebKit (Cypress uses it under the hood)
+        run: npx playwright install webkit
+
+      - name: Update Cypress fixture date
+        run: python3 scripts/update_cypress_fixture.py
+
+      - name: Serve and test (WebKit)
+        uses: cypress-io/github-action@v6
+        with:
+          start: npx serve . -l 5000
+          wait-on: 'http://localhost:5000'
+          wait-on-timeout: 30
+          browser: webkit
