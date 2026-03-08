@@ -31,8 +31,8 @@ jobs:
           headless: true
           install: false
 
-  webkit:
-    runs-on: macos-latest   # free for public repos; required for WebKit
+  webkit-playwright:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -43,16 +43,13 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Install Playwright WebKit (Cypress uses it under the hood)
-        run: npx playwright install webkit
+      - name: Install Playwright + WebKit
+        run: npx playwright install --with-deps webkit
 
       - name: Update Cypress fixture date
         run: python3 scripts/update_cypress_fixture.py
 
-      - name: Serve and test (WebKit)
-        uses: cypress-io/github-action@v6
-        with:
-          start: npx serve . -l 5000
-          wait-on: 'http://localhost:5000'
-          wait-on-timeout: 30
-          browser: webkit
+      - name: Serve and test (WebKit / Playwright)
+        run: npx serve . -l 5000 &
+             sleep 3 &&
+             npx playwright test --browser=webkit
