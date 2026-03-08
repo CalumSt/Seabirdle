@@ -79,37 +79,49 @@ def download(url: str, dest: pathlib.Path, ua: str | None = None) -> bool:
         return False
 
 
+# Magic byte signatures for audio formats
+_MAGIC = {
+    b"ID3":         ".mp3",   # MP3 with ID3 tag
+    b"\xff\xfb":  ".mp3",   # MP3 frame sync
+    b"\xff\xf3":  ".mp3",
+    b"\xff\xf2":  ".mp3",
+    b"RIFF":        ".wav",   # WAV (RIFF....WAVE)
+    b"OggS":        ".ogg",   # Ogg container (Vorbis/Opus)
+    b"fLaC":        ".flac",
+}
+
+def sniff_ext(data: bytes) -> str:
+    """Detect audio format from first 4 bytes. Returns extension including dot."""
+    for magic, ext in _MAGIC.items():
+        if data[:len(magic)] == magic:
+            return ext
+    return ".mp3"  # fallback — browser will reject if wrong, but MP3 is most common
+
+
 def download_audio(rec: dict) -> str | None:
-    """Download XC recording. Detects actual file extension from Content-Type
-    or URL so WAV files are saved correctly. Returns relative path or None."""
+    """Download XC recording. Sniffs actual format from magic bytes so the
+    correct extension is used regardless of Content-Type or URL. Returns relative path or None."""
     xc_id     = rec.get("id", "unknown")
     audio_url = rec.get("file") or f"https://xeno-canto.org/{xc_id}/download"
-    print(f"  Downloading audio XC{xc_id}…")
+    print(f"  Downloading audio XC{xc_id} from {audio_url}…")
 
     # Clean up any previous today.* files so stale formats don't linger
     for old_file in AUDIO_DIR.glob("today.*"):
         old_file.unlink()
 
-    # HEAD request to resolve redirects and get Content-Type before downloading
-    ext = ".mp3"  # default
-    try:
-        req = urllib.request.Request(audio_url, method="HEAD", headers={"User-Agent": "Seabirdle/1.0"})
-        with urllib.request.urlopen(req, timeout=10) as r:
-            ct = r.headers.get("Content-Type", "")
-            final_url = r.url
-        if "wav" in ct or final_url.endswith(".wav"):
-            ext = ".wav"
-        elif "ogg" in ct or final_url.endswith(".ogg"):
-            ext = ".ogg"
-    except Exception as e:
-        print(f"  HEAD request failed, defaulting to .mp3: {e}", file=sys.stderr)
+    # Download to a temporary file first, then sniff and rename
+    tmp = AUDIO_DIR / "today.tmp"
+    if not download(audio_url, tmp):
+        return None
 
+    data = tmp.read_bytes()
+    print(f"  Downloaded {len(data)} bytes, first 4: {data[:4]!r}")
+    ext  = sniff_ext(data)
     dest = AUDIO_DIR / f"today{ext}"
-    if download(audio_url, dest):
-        rel = str(dest.relative_to(REPO_ROOT)).replace("\\", "/")
-        print(f"  Audio saved → {rel}")
-        return rel
-    return None
+    tmp.rename(dest)
+    rel = str(dest.relative_to(REPO_ROOT)).replace("\\", "/")
+    print(f"  Audio saved → {rel} (detected format: {ext})")
+    return rel
 
 
 def get_inaturalist_photo_url(genus: str, species: str) -> tuple[str | None, str | None]:
