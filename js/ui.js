@@ -33,16 +33,36 @@ playBtn.addEventListener('click', () => {
         aud = new Audio(audioUrl());
         aud.crossOrigin = 'anonymous';
         aud.addEventListener('ended', () => { playBtn.textContent = '▶'; playBtn.classList.remove('playing'); });
-        aud.addEventListener('error', () => toast('Audio load failed — check CORS or key'));
+        aud.addEventListener('error', e => {
+            const err = e.target.error;
+            const codes = { 1: 'ABORTED', 2: 'NETWORK', 3: 'DECODE', 4: 'SRC_NOT_SUPPORTED' };
+            const detail = err ? `MediaError ${err.code} (${codes[err.code] || '?'}): ${err.message}` : 'unknown';
+            console.error('[audio] load error:', detail, 'src:', aud.src);
+            toast('Audio failed to load');
+        });
     } else { aud.src = audioUrl(); aud.currentTime = 0; }
+    console.log('[audio] attempting play, src:', aud.src, 'readyState:', aud.readyState,
+                'plays left before decrement:', S.plays);
     playBtn.textContent = '⏹'; playBtn.classList.add('playing');
     aud.play().then(() => {
-        // Only deduct a play if audio actually started
+        console.log('[audio] play started OK');
         S.plays--; renderP();
         if (S.plays === 0) playBtn.disabled = true;
-    }).catch(() => {
+    }).catch(err => {
+        console.error('[audio] play() rejected:', err.name, err.message,
+                      '| src:', aud.src,
+                      '| readyState:', aud.readyState,
+                      '| networkState:', aud.networkState,
+                      '| error:', aud.error);
         playBtn.textContent = '▶'; playBtn.classList.remove('playing');
-        toast('Autoplay blocked — click again');
+        // NotAllowedError = browser autoplay policy; NotSupportedError = format/src issue
+        if (err.name === 'NotAllowedError') {
+            toast('Click again to play (autoplay blocked)');
+        } else if (err.name === 'NotSupportedError') {
+            toast('Audio format not supported by this browser');
+        } else {
+            toast(`Playback error: ${err.name}`);
+        }
     });
 });
 function renderP() { dotEl.textContent = '●'.repeat(S.plays) + '○'.repeat(MAX_P - S.plays); }
