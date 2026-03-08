@@ -7,19 +7,22 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   fetch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true   # pull actual binaries, not LFS pointers
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Fetch recording, download audio + image
+      - name: Fetch recording and download audio + image
         env:
           XC_KEY: ${{ secrets.XC_API_KEY }}
         run: python scripts/fetch_bird.py
@@ -31,3 +34,25 @@ jobs:
           git add birds.json audio/today.* img/daily/today.*
           git diff --staged --quiet && echo "No change" || git commit -m "chore: daily bird $(date -u +%Y-%m-%d)"
           git push
+
+  deploy:
+    needs: fetch
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true   # must pull real files for Pages to serve them
+          ref: main   # ensure we have the latest commit from fetch job
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
