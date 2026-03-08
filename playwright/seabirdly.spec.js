@@ -10,7 +10,7 @@ const path = require('path');
 const TODAY = new Date().toISOString().slice(0, 10);
 
 async function mockApis(page) {
-  const fixtureDir = path.join(__dirname, 'cypress', 'fixtures');
+  const fixtureDir = path.join(__dirname, '../cypress', 'fixtures');
 
   await page.route('**/birds_list.json', route => {
     route.fulfill({ path: path.join(fixtureDir, 'birds_list.json') });
@@ -29,6 +29,8 @@ const BASE = 'http://localhost:5000';
 
 test.beforeEach(async ({ page }) => {
   await mockApis(page);
+  // Navigate to the origin first — WebKit blocks localStorage on about:blank
+  await page.goto(BASE);
   await page.evaluate(() => localStorage.clear());
 });
 
