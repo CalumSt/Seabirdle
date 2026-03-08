@@ -168,7 +168,7 @@ test('Enter key submits a guess', async ({ page }) => {
   await page.goto(BASE);
   await page.fill('#guess-input', 'Razorbill');
   await page.press('#guess-input', 'Enter');
-  await expect(page.locator('.guess-row').filter({ hasNot: page.locator('.empty') })).toHaveCount(1);
+  await expect(page.locator('.guess-row:not(.empty)')).toHaveCount(1);
 });
 
 // ── Responsive ───────────────────────────────────────────────────────────
