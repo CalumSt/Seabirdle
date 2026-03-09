@@ -29,10 +29,12 @@ jobs:
 
       - name: Commit assets
         run: |
+          git lfs install
           git config user.email "seabirdle-bot@users.noreply.github.com"
           git config user.name  "Seabirdle Bot"
           git add birds.json audio/today.* img/daily/today.*
           git diff --staged --quiet && echo "No change" || git commit -m "chore: daily bird $(date -u +%Y-%m-%d)"
+          git lfs push --all origin
           git push
 
   deploy:
