@@ -81,46 +81,69 @@ def download(url: str, dest: pathlib.Path, ua: str | None = None) -> bool:
 
 # Magic byte signatures for audio formats
 _MAGIC = {
-    b"ID3":         ".mp3",   # MP3 with ID3 tag
-    b"\xff\xfb":  ".mp3",   # MP3 frame sync
-    b"\xff\xf3":  ".mp3",
-    b"\xff\xf2":  ".mp3",
-    b"RIFF":        ".wav",   # WAV (RIFF....WAVE)
-    b"OggS":        ".ogg",   # Ogg container (Vorbis/Opus)
-    b"fLaC":        ".flac",
+    b"ID3":        ".mp3",   # MP3 with ID3 tag
+    b"\xff\xfb": ".mp3",   # MP3 frame sync
+    b"\xff\xf3": ".mp3",
+    b"\xff\xf2": ".mp3",
+    b"RIFF":       ".wav",   # WAV
+    b"OggS":       ".ogg",   # Ogg (Vorbis/Opus)
+    b"fLaC":       ".flac",
 }
 
 def sniff_ext(data: bytes) -> str:
-    """Detect audio format from first 4 bytes. Returns extension including dot."""
     for magic, ext in _MAGIC.items():
         if data[:len(magic)] == magic:
             return ext
-    return ".mp3"  # fallback — browser will reject if wrong, but MP3 is most common
+    return ".mp3"
 
 
 def download_audio(rec: dict) -> str | None:
-    """Download XC recording. Sniffs actual format from magic bytes so the
-    correct extension is used regardless of Content-Type or URL. Returns relative path or None."""
+    """Download XC recording. Sniffs format from magic bytes.
+    Rejects HTML responses (auth failures). Returns relative path or None."""
     xc_id     = rec.get("id", "unknown")
     audio_url = rec.get("file") or f"https://xeno-canto.org/{xc_id}/download"
     print(f"  Downloading audio XC{xc_id} from {audio_url}…")
 
-    # Clean up any previous today.* files so stale formats don't linger
     for old_file in AUDIO_DIR.glob("today.*"):
         old_file.unlink()
 
-    # Download to a temporary file first, then sniff and rename
     tmp = AUDIO_DIR / "today.tmp"
     if not download(audio_url, tmp):
         return None
 
     data = tmp.read_bytes()
-    print(f"  Downloaded {len(data)} bytes, first 4: {data[:4]!r}")
-    ext  = sniff_ext(data)
-    dest = AUDIO_DIR / f"today{ext}"
-    tmp.rename(dest)
+    print(f"  Downloaded {len(data)} bytes, first 16: {data[:16]!r}")
+
+    if data[:15].lstrip().startswith(b"<") or b"<html" in data[:256].lower():
+        print(f"  ERROR: response is HTML not audio (auth/redirect failure)", file=sys.stderr)
+        print(f"  First 256 bytes: {data[:256]}", file=sys.stderr)
+        tmp.unlink(missing_ok=True)
+        return None
+
+    ext = sniff_ext(data)
+
+    if ext != ".mp3":
+        # Transcode to MP3 — keeps file size predictable for git storage
+        import subprocess
+        src_file = AUDIO_DIR / f"today{ext}"
+        tmp.rename(src_file)
+        mp3 = AUDIO_DIR / "today.mp3"
+        print(f"  Transcoding {ext} → .mp3 via ffmpeg…")
+        result = subprocess.run(
+            ["ffmpeg", "-y", "-i", str(src_file), "-codec:a", "libmp3lame", "-q:a", "4", str(mp3)],
+            capture_output=True, text=True
+        )
+        src_file.unlink(missing_ok=True)
+        if result.returncode != 0 or not mp3.exists():
+            print(f"  ffmpeg failed:\n{result.stderr}", file=sys.stderr)
+            return None
+        dest = mp3
+    else:
+        dest = AUDIO_DIR / "today.mp3"
+        tmp.rename(dest)
+
     rel = str(dest.relative_to(REPO_ROOT)).replace("\\", "/")
-    print(f"  Audio saved → {rel} (detected format: {ext})")
+    print(f"  Audio saved → {rel}")
     return rel
 
 
@@ -239,7 +262,7 @@ def main():
     else:
         print("  WARNING: no recording found", file=sys.stderr)
 
-    # Download audio
+    # Audio URL — use XC direct link, no local download needed
     audio_path = download_audio(rec) if rec else None
     if not audio_path:
         print("  WARNING: audio not saved", file=sys.stderr)
