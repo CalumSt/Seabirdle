@@ -470,8 +470,6 @@ h1 {
 
 /* ── FOOTER ──────────────────────────────────────────────────────────────── */
 footer {
-  position: relative;
-  z-index: 1;
   width: 100%;
   max-width: 560px;
   padding: 0 16px 28px;
