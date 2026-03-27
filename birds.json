@@ -1,15 +1,15 @@
 {
-  "date": "2026-03-26",
-  "name": "Black Guillemot",
-  "genus": "Cepphus",
-  "species": "grylle",
+  "date": "2026-03-27",
+  "name": "Little Auk",
+  "genus": "Alle",
+  "species": "alle",
   "recording": {
-    "id": "135860",
-    "gen": "Cepphus",
-    "sp": "grylle",
+    "id": "135863",
+    "gen": "Alle",
+    "sp": "alle",
     "ssp": "",
     "grp": "birds",
-    "en": "Black Guillemot",
+    "en": "Little Auk",
     "rec": "Fernand DEROUSSEN",
     "cnt": "Norway",
     "loc": "Svalbard",
@@ -18,16 +18,16 @@
     "alt": "20",
     "type": "call, song",
     "sex": "",
-    "stage": "juvenile",
+    "stage": "",
     "method": "field recording",
-    "url": "//xeno-canto.org/135860",
-    "file": "https://xeno-canto.org/135860/download",
-    "file-name": "XC135860-2007070801 Cepphus grylle_F DEROUSSEN.mp3",
+    "url": "//xeno-canto.org/135863",
+    "file": "https://xeno-canto.org/135863/download",
+    "file-name": "XC135863-2007070804 Alle alle_F DEROUSSEN.mp3",
     "sono": {
-      "small": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135860/grey-small.png",
-      "med": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135860/grey-medium.png",
-      "large": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135860/colour.png",
-      "full": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135860/colour.png"
+      "small": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135863/grey-small.png",
+      "med": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135863/grey-medium.png",
+      "large": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135863/colour.png",
+      "full": "//xeno-canto.org/sounds/spectrograms/UXGZWVYDFE/135863/colour.png"
     },
     "osci": {
       "small": "",
@@ -36,12 +36,15 @@
     },
     "lic": "//creativecommons.org/licenses/by-nc-nd/3.0/",
     "q": "A",
-    "length": "1:09",
+    "length": "0:47",
     "time": "?",
     "date": "2007-07-08",
     "uploaded": "2013-06-01",
     "also": [
-      "Rissa tridactyla"
+      "Uria lomvia",
+      "Cepphus grylle",
+      "Rissa tridactyla",
+      "Plectrophenax nivalis"
     ],
     "rmk": "",
     "animal-seen": "yes",
@@ -55,6 +58,6 @@
     "annotation-set": []
   },
   "audioPath": "audio/today.mp3",
-  "imagePath": "img/daily/today.jpeg",
-  "imageAttribution": "(c) pavelfutoran, some rights reserved (CC BY-NC)"
+  "imagePath": "img/daily/today.jpg",
+  "imageAttribution": "(c) brian stahls, some rights reserved (CC BY-NC)"
 }
