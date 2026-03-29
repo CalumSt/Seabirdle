@@ -17,54 +17,64 @@ concurrency:
 # ... (on, permissions, concurrency same as before)
 
 jobs:
-  test-and-build:
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.58.2-noble
+  # --- STEP 1: TEST ON NATIVE ENVIRONMENTS ---
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Chromium (Linux)
+            os: ubuntu-latest
+            browser: chromium
+          - name: WebKit (macOS)
+            os: macos-latest # Native Safari engine
+            browser: webkit
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
-
+      
       - name: Install dependencies
         run: npm ci
 
-      - name: Update Fixtures
-        run: python3 scripts/update_cypress_fixture.py
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps ${{ matrix.browser }}
 
-      - name: Start Server and Wait
+      - name: Run Tests
         run: |
           npx serve . -l 5000 &
-          sleep 5 # Give it a literal 5 seconds to settle
           npx wait-on http://127.0.0.1:5000 --timeout 60000
-
-      - name: Run Playwright tests
-        run: npx playwright test --config playwright.config.js
+          npx playwright test --project=${{ matrix.browser }}
         env:
-          # This ensures Playwright knows where to look
           PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:5000
 
-      # ── BUILD & OBFUSCATE ──
+  # --- STEP 2: BUILD & OBFUSCATE (Only if ALL tests pass) ---
+  build_and_deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Minify and Obfuscate
-        if: github.ref == 'refs/heads/main'
         run: |
           npm install -g terser clean-css-cli
-          terser app.js --compress --mangle --output app.js
-          cleancss -o style.css style.css
+          terser js/app.js --compress --mangle --output js/app.js
+          cleancss -o css/style.css css/style.css
 
       - name: Upload Pages Artifact
-        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
-  deploy:
-    needs: test-and-build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
