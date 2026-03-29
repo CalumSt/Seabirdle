@@ -14,14 +14,15 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+# ... (on, permissions, concurrency same as before)
+
 jobs:
-  test_and_build:
+  test-and-build:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.58.2-noble
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -33,11 +34,21 @@ jobs:
       - name: Update Fixtures
         run: python3 scripts/update_cypress_fixture.py
 
+      # ── MANUAL SERVER START ──
+      - name: Start Server in Background
+        run: npx serve . -l 5000 & 
+
+      # Wait for the port to be active before moving to tests
+      - name: Wait for Server
+        run: npx wait-on http://127.0.0.1:5000 --timeout 30000
+
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --config playwright.config.js
+        env:
+          # This ensures Playwright knows where to look
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:5000
 
       # ── BUILD & OBFUSCATE ──
-      # Only runs if tests pass. This mangles the JS to hide answers.
       - name: Minify and Obfuscate
         if: github.ref == 'refs/heads/main'
         run: |
@@ -52,12 +63,9 @@ jobs:
           path: '.'
 
   deploy:
-    needs: test_and_build
+    needs: test-and-build
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
