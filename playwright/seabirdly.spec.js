@@ -10,7 +10,7 @@ const path = require('path');
 const TODAY = new Date().toISOString().slice(0, 10);
 
 async function mockApis(page) {
-  const fixtureDir = path.join(__dirname, '../cypress', 'fixtures');
+  const fixtureDir = path.join(__dirname, 'fixtures');
 
   await page.route('**/birds_list.json', route => {
     route.fulfill({ path: path.join(fixtureDir, 'birds_list.json') });
@@ -25,18 +25,16 @@ async function mockApis(page) {
   await page.route('**/img/daily/**', route => route.fulfill({ status: 200, body: '' }));
 }
 
-const BASE = 'http://localhost:5000';
-
 test.beforeEach(async ({ page }) => {
   await mockApis(page);
   // Navigate to the origin first — WebKit blocks localStorage on about:blank
-  await page.goto(BASE);
+  await page.goto('/');
   await page.evaluate(() => localStorage.clear());
 });
 
 // ── Boot ──────────────────────────────────────────────────────────────────
 test('loads and shows game UI', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await expect(page.locator('#bird-preview-wrap')).toBeVisible();
   await expect(page.locator('#audio-section')).toBeVisible();
   await expect(page.locator('#guesses-section')).toBeVisible();
@@ -45,13 +43,13 @@ test('loads and shows game UI', async ({ page }) => {
 });
 
 test('shows 6 empty guess rows on start', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await expect(page.locator('.guess-row')).toHaveCount(6);
   await expect(page.locator('.guess-row.empty')).toHaveCount(6);
 });
 
 test('image is blurred on start', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await expect(page.locator('#blur-label')).toContainText('remaining');
   const style = await page.locator('#prog-fill').getAttribute('style');
   expect(style).toContain('width: 0%');
@@ -59,14 +57,14 @@ test('image is blurred on start', async ({ page }) => {
 
 // ── Autocomplete ──────────────────────────────────────────────────────────
 test('autocomplete appears when typing', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'puf');
   await expect(page.locator('#autocomplete')).toBeVisible();
   await expect(page.locator('.ac-item').first()).toBeVisible();
 });
 
 test('clicking autocomplete item fills input', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'puf');
   await page.locator('.ac-item').first().click();
   const val = await page.inputValue('#guess-input');
@@ -76,7 +74,7 @@ test('clicking autocomplete item fills input', async ({ page }) => {
 
 // ── Wrong guess ───────────────────────────────────────────────────────────
 test('rejects unknown bird name', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'Penguin');
   await page.click('#submit-btn');
   await expect(page.locator('#toast')).toContainText('Not in the seabird list');
@@ -84,7 +82,7 @@ test('rejects unknown bird name', async ({ page }) => {
 });
 
 test('rejects duplicate guess', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'Razorbill');
   await page.click('#submit-btn');
   await page.fill('#guess-input', 'Razorbill');
@@ -93,7 +91,7 @@ test('rejects duplicate guess', async ({ page }) => {
 });
 
 test('records wrong guess and reduces blur label', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   const before = await page.locator('#blur-label').innerText();
   const countBefore = parseInt(before);
   await page.fill('#guess-input', 'Razorbill');
@@ -105,7 +103,7 @@ test('records wrong guess and reduces blur label', async ({ page }) => {
 
 // ── Correct guess ─────────────────────────────────────────────────────────
 test('wins on correct guess', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'Atlantic Puffin');
   await page.click('#submit-btn');
   await expect(page.locator('#result-panel')).toBeVisible();
@@ -114,7 +112,7 @@ test('wins on correct guess', async ({ page }) => {
 });
 
 test('saves play date to localStorage on win', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'Atlantic Puffin');
   await page.click('#submit-btn');
   const stored = await page.evaluate(() => localStorage.getItem('lastPlayDate'));
@@ -123,7 +121,7 @@ test('saves play date to localStorage on win', async ({ page }) => {
 
 // ── Already played ────────────────────────────────────────────────────────
 test('shows already-played on revisit', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.evaluate(today => localStorage.setItem('lastPlayDate', today), TODAY);
   await page.reload();
   await expect(page.locator('#result-panel')).toBeVisible();
@@ -133,7 +131,7 @@ test('shows already-played on revisit', async ({ page }) => {
 
 // ── Lose after 6 guesses ──────────────────────────────────────────────────
 test('loses after 6 wrong guesses', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   const wrong = [
     'Razorbill', 'Common Guillemot', 'Northern Gannet',
     'European Shag', 'Great Cormorant', 'Manx Shearwater',
@@ -149,7 +147,7 @@ test('loses after 6 wrong guesses', async ({ page }) => {
 
 // ── Hint toast ────────────────────────────────────────────────────────────
 test('shows genus hint after 2 wrong guesses', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'Razorbill');
   await page.click('#submit-btn');
   await page.fill('#guess-input', 'Common Guillemot');
@@ -159,13 +157,13 @@ test('shows genus hint after 2 wrong guesses', async ({ page }) => {
 
 // ── Audio button ──────────────────────────────────────────────────────────
 test('play button is enabled', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await expect(page.locator('#play-btn')).not.toBeDisabled();
 });
 
 // ── Keyboard ──────────────────────────────────────────────────────────────
 test('Enter key submits a guess', async ({ page }) => {
-  await page.goto(BASE);
+  await page.goto('/');
   await page.fill('#guess-input', 'Razorbill');
   await page.press('#guess-input', 'Enter');
   await expect(page.locator('.guess-row:not(.empty)')).toHaveCount(1);
@@ -174,7 +172,7 @@ test('Enter key submits a guess', async ({ page }) => {
 // ── Responsive ───────────────────────────────────────────────────────────
 test('renders at mobile width', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto(BASE);
+  await page.goto('/');
   await expect(page.locator('#app')).toBeVisible();
   await expect(page.locator('#guess-input')).toBeVisible();
   await expect(page.locator('#submit-btn')).toBeVisible();
