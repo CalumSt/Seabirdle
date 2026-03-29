@@ -4,223 +4,395 @@
     "genus": "Fratercula",
     "species": "arctica",
     "image": "img/birds/atlantic_puffin.jpg",
-    "fact": "Puffins can hold up to 62 sand eels crosswise in their bill at once, thanks to a specially hinged jaw and backward-pointing tongue spines."
+    "fact": "Puffins can hold dozens of sand eels in their bill at once — the record is 62 — thanks to a specially hinged jaw and backward-pointing tongue spines.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/puffin"
   },
   {
     "name": "Razorbill",
     "genus": "Alca",
     "species": "torda",
     "image": "img/birds/razorbill.jpg",
-    "fact": "Razorbills are monogamous and often pair for life, returning to the same cliff ledge each breeding year."
+    "fact": "Razorbills are monogamous and often pair for life, returning to the same cliff ledge each breeding year to raise a single chick.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/razorbill"
   },
   {
     "name": "Common Guillemot",
     "genus": "Uria",
     "species": "aalge",
     "image": "img/birds/common_guillemot.jpg",
-    "fact": "Guillemot eggs are pyriform (pear-shaped) so they spin in an arc rather than rolling off cliff ledges."
+    "fact": "Guillemot eggs are pyriform (pear-shaped); this causes them to spin in a tight circle if nudged, preventing them from rolling off narrow cliff ledges.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/guillemot"
   },
   {
     "name": "Black Guillemot",
     "genus": "Cepphus",
     "species": "grylle",
     "image": "img/birds/black_guillemot.jpg",
-    "fact": "Unlike most auks, Black Guillemots rarely venture far from shore and nest in coastal rock crevices and stone walls."
+    "fact": "Unlike most auks, Black Guillemots rarely venture far from shore and typically nest in pairs or small groups rather than massive colonies.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/black-guillemot"
   },
   {
     "name": "Little Auk",
     "genus": "Alle",
     "species": "alle",
     "image": "img/birds/little_auk.jpg",
-    "fact": "Little Auks breed in the high Arctic in colonies of millions, but winter at sea off British coasts, easily missed in rough weather."
+    "fact": "The Little Auk is a starling-sized winter visitor to the UK; it breeds in the high Arctic in colonies numbering in the millions.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/little-auk"
   },
   {
     "name": "Northern Gannet",
     "genus": "Morus",
     "species": "bassanus",
     "image": "img/birds/northern_gannet.jpg",
-    "fact": "Gannets plunge-dive at over 100 km/h and have no external nostrils; impact is absorbed by subcutaneous air sacs."
+    "fact": "Gannets plunge-dive at speeds of up to 100 km/h; they have no external nostrils and use subcutaneous air sacs to cushion the impact.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/gannet"
   },
   {
     "name": "European Shag",
     "genus": "Gulosus",
     "species": "aristotelis",
     "image": "img/birds/european_shag.jpg",
-    "fact": "Shags have no waterproofing oil and must spread their wings to dry after diving — a posture known as 'wing-spreading'."
+    "fact": "Shags often stand with wings spread to dry; unlike many birds, their feathers are not fully waterproof, which helps them dive deeper by reducing buoyancy.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/seabirds/shag"
   },
   {
     "name": "Great Cormorant",
     "genus": "Phalacrocorax",
     "species": "carbo",
     "image": "img/birds/great_cormorant.jpg",
-    "fact": "Great Cormorants were trained by fishermen in China and Japan over 1,400 years ago — the practice still continues ceremonially today."
+    "fact": "Great Cormorants have been used by fishermen in Asia for over 1,300 years; a snare around the neck prevents the bird from swallowing larger fish.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/cormorant"
   },
   {
     "name": "Manx Shearwater",
     "genus": "Puffinus",
     "species": "puffinus",
     "image": "img/birds/manx_shearwater.jpg",
-    "fact": "Manx Shearwaters navigate back to their home burrow from 5,000 km with near-perfect accuracy and can live over 50 years."
+    "fact": "These birds are incredibly long-lived; one individual was recorded still breeding at age 55, having flown an estimated 8 million miles in its life.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/manx-shearwater"
   },
   {
     "name": "Sooty Shearwater",
     "genus": "Ardenna",
     "species": "grisea",
     "image": "img/birds/sooty_shearwater.jpg",
-    "fact": "Sooty Shearwaters undertake one of the longest migrations of any bird — a figure-of-eight circuit of the entire Pacific Ocean."
+    "fact": "Sooty Shearwaters undertake a massive 65,000 km figure-of-eight migration across the Pacific and Atlantic oceans each year.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/sooty-shearwater"
   },
   {
     "name": "Balearic Shearwater",
     "genus": "Puffinus",
     "species": "mauretanicus",
     "image": "img/birds/balearic_shearwater.jpg",
-    "fact": "The Balearic Shearwater is Critically Endangered — the entire world population breeds only in the Balearic Islands."
+    "fact": "The Balearic Shearwater is Europe's most endangered seabird; it is Critically Endangered and breeds only on the Balearic Islands.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/balearic-shearwater"
   },
   {
     "name": "European Storm Petrel",
     "genus": "Hydrobates",
     "species": "pelagicus",
     "image": "img/birds/european_storm_petrel.jpg",
-    "fact": "Storm Petrels 'walk' on the water surface while feeding, leading sailors to name them after St Peter."
+    "fact": "The name 'Petrel' is a diminutive of Peter, referring to St. Peter, because the birds appear to walk on water as they forage.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/storm-petrel"
   },
   {
     "name": "Leach’s Storm Petrel",
     "genus": "Hydrobates",
     "species": "leucorhous",
     "image": "img/birds/leachs_storm_petrel.jpg",
-    "fact": "Leach’s Storm Petrels have a deeply forked tail and an erratic, bounding flight quite unlike any other British seabird."
+    "fact": "Leach’s Storm Petrels have a deeply forked tail and a bounding, erratic flight pattern that resembles a large butterfly or a nighthawk.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/leachs-storm-petrel"
   },
   {
     "name": "Northern Fulmar",
     "genus": "Fulmarus",
     "species": "glacialis",
     "image": "img/birds/northern_fulmar.jpg",
-    "fact": "Fulmars defend their nest by projectile-vomiting a foul-smelling stomach oil up to a metre at intruders."
+    "fact": "Fulmars defend their nests by spitting a foul-smelling stomach oil at intruders, which can ruin the waterproofing of other birds' feathers.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/fulmar"
   },
   {
     "name": "Great Skua",
     "genus": "Stercorarius",
     "species": "skua",
     "image": "img/birds/great_skua.jpg",
-    "fact": "Great Skuas are aggressive kleptoparasites that will repeatedly strike humans who approach their nest — including low-flying aircraft."
+    "fact": "Often called the 'Bonxie', this aggressive bird is a kleptoparasite, meaning it steals food from other birds by harassing them mid-air.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/great-skua"
   },
   {
     "name": "Arctic Skua",
     "genus": "Stercorarius",
     "species": "parasiticus",
     "image": "img/birds/arctic_skua.jpg",
-    "fact": "Arctic Skuas come in pale and dark morphs; chasing Terns and forcing them to drop fish mid-air is their primary feeding strategy."
+    "fact": "Arctic Skuas are known for their spectacular aerial chases, forcing terns and puffins to drop their catch so the skua can steal it.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/arctic-skua"
   },
   {
     "name": "Pomarine Skua",
     "genus": "Stercorarius",
     "species": "pomarinus",
     "image": "img/birds/pomarine_skua.jpg",
-    "fact": "Adult Pomarine Skuas have distinctive spoon-shaped central tail feathers — the feature gives the species its common name."
+    "fact": "Adults in breeding plumage have unique 'spoons' — central tail feathers that are twisted 90 degrees and rounded at the ends.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/pomarine-skua"
   },
   {
     "name": "Black-legged Kittiwake",
     "genus": "Rissa",
     "species": "tridactyla",
     "image": "img/birds/black_legged_kittiwake.jpg",
-    "fact": "The Kittiwake is named for its call. Unlike most gulls it is almost entirely pelagic outside the breeding season."
+    "fact": "The Kittiwake is the most oceanic of our gulls, spending the entire winter out at sea and only returning to land to breed on sheer cliffs.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/kittiwake"
   },
   {
     "name": "European Herring Gull",
     "genus": "Larus",
     "species": "argentatus",
     "image": "img/birds/european_herring_gull.jpg",
-    "fact": "Herring Gull chicks instinctively peck at the red spot on the parent’s bill to trigger regurgitation — a reflex proven experimentally by Tinbergen."
+    "fact": "The red spot on the adult's bill is a 'releaser' for chicks; they peck at it to signal the parent to regurgitate food.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/herring-gull"
   },
   {
     "name": "Great Black-backed Gull",
     "genus": "Larus",
     "species": "marinus",
     "image": "img/birds/great_black_backed_gull.jpg",
-    "fact": "The world’s largest gull. Great Black-backed Gulls regularly predate seabirds up to the size of a Puffin, swallowing them whole."
+    "fact": "The world’s largest gull; it is a formidable predator that can hunt and kill adult birds as large as a Puffin or a Manx Shearwater.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/great-black-backed-gull"
   },
   {
     "name": "Lesser Black-backed Gull",
     "genus": "Larus",
     "species": "fuscus",
     "image": "img/birds/lesser_black_backed_gull.jpg",
-    "fact": "Lesser Black-backed Gulls were once entirely migratory but British birds increasingly overwinter, a shift tracked since the 1960s."
+    "fact": "While many migrate to Africa or Iberia, increasing numbers of Lesser Black-backed Gulls now spend the winter in the UK.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/lesser-black-backed-gull"
   },
   {
     "name": "Common Gull",
     "genus": "Larus",
     "species": "canus",
     "image": "img/birds/common_gull.jpg",
-    "fact": "Despite its name, the Common Gull is not the most abundant British gull — Herring and Black-headed Gulls both outnumber it."
+    "fact": "Despite the name, it is less common than the Herring Gull or Black-headed Gull; its name actually refers to its habit of feeding on common land.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/common-gull"
   },
   {
     "name": "Black-headed Gull",
     "genus": "Chroicocephalus",
     "species": "ridibundus",
     "image": "img/birds/black_headed_gull.jpg",
-    "fact": "The Black-headed Gull’s ‘black’ hood is actually dark chocolate-brown, and it is absent entirely in winter plumage."
+    "fact": "The 'black' hood is actually dark chocolate-brown and is lost during the winter, leaving only a small dark spot behind the eye.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/black-headed-gull"
   },
   {
     "name": "Mediterranean Gull",
     "genus": "Ichthyaetus",
     "species": "melanocephalus",
     "image": "img/birds/mediterranean_gull.jpg",
-    "fact": "The Mediterranean Gull has a pure white wingtip with no black — distinguishing it from the Black-headed Gull at a glance."
+    "fact": "Mediterranean Gulls have pure white wingtips, lacking the black 'ink-dipped' tips seen on most other UK gull species.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/mediterranean-gull"
   },
   {
     "name": "Little Gull",
     "genus": "Hydrocoloeus",
     "species": "minutus",
     "image": "img/birds/little_gull.jpg",
-    "fact": "The Little Gull is the world’s smallest gull. Adults have a distinctive black underwing that flashes conspicuously in flight."
+    "fact": "The world's smallest gull; it can be identified in flight by the striking jet-black underside of its wings.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/little-gull"
   },
   {
     "name": "Arctic Tern",
     "genus": "Sterna",
     "species": "paradisaea",
     "image": "img/birds/arctic_tern.jpg",
-    "fact": "Arctic Terns migrate ~90,000 km per year pole-to-pole — over a lifetime this exceeds three trips to the Moon and back."
+    "fact": "The Arctic Tern sees more daylight than any other creature, migrating from the Arctic to the Antarctic and back every year.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/arctic-tern"
   },
   {
     "name": "Common Tern",
     "genus": "Sterna",
     "species": "hirundo",
     "image": "img/birds/common_tern.jpg",
-    "fact": "Common Terns can live over 30 years and return to the same colony annually with remarkable nest-site fidelity."
+    "fact": "Known as the 'Sea Swallow' due to its long tail streamers and graceful flight, it is a frequent visitor to inland reservoirs and gravel pits.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/common-tern"
   },
   {
     "name": "Sandwich Tern",
     "genus": "Thalasseus",
     "species": "sandvicensis",
     "image": "img/birds/sandwich_tern.jpg",
-    "fact": "Sandwich Terns are named after Sandwich in Kent, where the species was first scientifically described in 1784."
+    "fact": "The Sandwich Tern is the largest of our common terns and is easily identified by its shaggy black crest and yellow-tipped black bill.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/sandwich-tern"
   },
   {
     "name": "Roseate Tern",
     "genus": "Sterna",
     "species": "dougallii",
     "image": "img/birds/roseate_tern.jpg",
-    "fact": "The Roseate Tern is one of Britain’s rarest breeding seabirds; the UK population is largely confined to a handful of Irish Sea islands."
+    "fact": "One of the UK's rarest breeding birds, it has a very pale plumage that can show a delicate pink flush on the breast during breeding season.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/roseate-tern"
   },
   {
     "name": "Little Tern",
     "genus": "Sternula",
     "species": "albifrons",
     "image": "img/birds/little_tern.jpg",
-    "fact": "Little Terns nest on open shingle beaches — one of Britain’s most exposed and predator-vulnerable nesting sites."
+    "fact": "The UK's smallest tern; it nests in shallow scrapes on beaches, making its eggs highly vulnerable to high tides and human disturbance.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/little-tern"
   },
   {
     "name": "Red-throated Diver",
     "genus": "Gavia",
     "species": "stellata",
     "image": "img/birds/red_throated_diver.jpg",
-    "fact": "Red-throated Divers are the only diver able to take off from land — all other species require a long water run-up."
+    "fact": "Red-throated Divers are the only divers capable of taking flight directly from land; others require a long running start across the water.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/red-throated-diver"
   },
   {
     "name": "Great Northern Diver",
     "genus": "Gavia",
     "species": "immer",
     "image": "img/birds/great_northern_diver.jpg",
-    "fact": "The haunting wail of the Great Northern Diver is the defining sound of North American wilderness and Scottish sea lochs in winter."
+    "fact": "While they are winter visitors to the UK, they are known in North America as Loons, famous for their haunting, yodelling calls.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/great-northern-diver"
+  },
+  {
+    "name": "Purple Sandpiper",
+    "genus": "Calidris",
+    "species": "maritima",
+    "fact": "Almost exclusively a bird of rocky shores, this sandpiper is often found dodging spray from crashing waves as it hunts for small molluscs.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/purple-sandpiper"
+  },
+  {
+    "name": "Ruddy Turnstone",
+    "genus": "Arenaria",
+    "species": "interpres",
+    "fact": "True to its name, this bird uses its wedge-shaped bill to flip over stones, seaweed, and debris to find hidden crustaceans and insects.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/turnstone"
+  },
+  {
+    "name": "Sanderling",
+    "genus": "Calidris",
+    "species": "alba",
+    "fact": "Sanderlings are famous for their 'clockwork toy' running style, chasing retreating waves down the beach and sprinting back before the next one hits.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/sanderling"
+  },
+  {
+    "name": "Dunlin",
+    "genus": "Calidris",
+    "species": "alpina",
+    "fact": "The most common small wader in the UK; in winter, they form massive, synchronized flocks that twist and turn over estuaries like smoke.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/dunlin"
+  },
+  {
+    "name": "Eurasian Curlew",
+    "genus": "Numenius",
+    "species": "arquata",
+    "fact": "Europe's largest wading bird, easily identified by its incredibly long, down-curved bill and haunting, bubbling 'cur-lee' call.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/curlew"
+  },
+  {
+    "name": "Eurasian Oystercatcher",
+    "genus": "Haematopus",
+    "species": "ostralegus",
+    "fact": "Despite the name, they rarely eat oysters; they use their hammer-like orange bills to bash open cockles and mussels or probe for worms.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/oystercatcher"
+  },
+  {
+    "name": "Common Redshank",
+    "genus": "Tringa",
+    "species": "totanus",
+    "fact": "Known as the 'sentinel of the marsh' because its loud, piping alarm call warns all other birds whenever a predator (or human) approaches.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/redshank"
+  },
+  {
+    "name": "Ringed Plover",
+    "genus": "Charadrius",
+    "species": "hiaticula",
+    "fact": "To protect their nests on open shingle, adults will feign a 'broken wing' to lure predators away from their camouflaged eggs.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/ringed-plover"
+  },
+  {
+    "name": "Grey Plover",
+    "genus": "Pluvialis",
+    "species": "squatarola",
+    "fact": "In flight, this species is easily identified by its black 'armpits' (axillaries), which contrast sharply with its otherwise pale underwings.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/grey-plover"
+  },
+  {
+    "name": "Red Knot",
+    "genus": "Calidris",
+    "species": "canutus",
+    "fact": "Knots are incredible long-distance migrants; some UK wintering birds fly all the way from the Canadian Arctic to reach our mudflats.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/knot"
+  },
+  {
+    "name": "Bar-tailed Godwit",
+    "genus": "Limosa",
+    "species": "lapponica",
+    "fact": "A world-record flyer; one individual of this species was recorded flying non-stop for 11 days from Alaska to New Zealand.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/bar-tailed-godwit"
+  },
+  {
+    "name": "Whimbrel",
+    "genus": "Numenius",
+    "species": "phaeopus",
+    "fact": "Similar to a Curlew but smaller with a shorter bill; its distinctive call is a rapid, seven-note tittering whistle.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/whimbrel"
+  },
+  {
+    "name": "Common Eider",
+    "genus": "Somateria",
+    "species": "mollissima",
+    "fact": "The UK's heaviest and fastest-flying duck; its famous down feathers are so insulating they are still used in high-end bedding.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/eider"
+  },
+  {
+    "name": "Brent Goose",
+    "genus": "Branta",
+    "species": "bernicla",
+    "fact": "These small, dark geese travel from Siberia to the UK to spend the winter feeding almost exclusively on coastal eelgrass.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/brent-goose"
+  },
+  {
+    "name": "Rock Pipit",
+    "genus": "Anthus",
+    "species": "petrosus",
+    "fact": "Unlike most small songbirds, the Rock Pipit is a coastal specialist, nesting on cliffs and feeding on tiny kelp flies among the rotting seaweed.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/rock-pipit"
+  },
+  {
+    "name": "Greenshank",
+    "genus": "Tringa",
+    "species": "nebularia",
+    "fact": "A tall, elegant wader with a slightly upturned bill. They often hunt small fish by running through shallow water and snapping them up.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/wading-birds/greenshank"
+  },
+  {
+    "name": "Long-tailed Duck",
+    "genus": "Clangula",
+    "species": "hyemalis",
+    "fact": "A deep-diving sea duck that can reach depths of up to 60 metres to find molluscs and crustaceans on the ocean floor.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/long-tailed-duck"
+  },
+  {
+    "name": "Slavonian Grebe",
+    "genus": "Podiceps",
+    "species": "auritus",
+    "fact": "In winter, these 'horned' grebes move to the coast; they are known for eating their own feathers to help protect their digestive tract from fish bones.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/grebes-and-divers/slavonian-grebe"
+  },
+  {
+    "name": "Velvet Scoter",
+    "genus": "Melanitta",
+    "species": "fusca",
+    "fact": "A large black sea duck that can be distinguished from the similar Common Scoter by the white wing-bar visible when it flaps.",
+    "source": "https://www.rspb.org.uk/birds-and-wildlife/velvet-scoter"
+  },
+  {
+    "name": "Common Shelduck",
+    "genus": "Tadorna",
+    "species": "tadorna",
+    "fact": "Looking like a cross between a goose and a duck, Shelducks often nest in abandoned rabbit burrows near the coast.",
+    "source": "https://www.wildlifetrusts.org/wildlife-explorer/birds/ducks-geese-and-swans/shelduck"
   }
 ]
