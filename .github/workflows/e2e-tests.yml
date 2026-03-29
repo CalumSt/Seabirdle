@@ -1,4 +1,4 @@
-name: End-to-End Tests & Deploy
+name: CI/CD Pipeline
 
 on:
   push:
@@ -15,24 +15,20 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # ── JOB 1: TEST ────────────────────────────────────────────────────────────
-  test:
-    timeout-minutes: 10
+  test_and_build:
     runs-on: ubuntu-latest
-    # Using the predefined Microsoft Playwright image
-    # This skips the "npx playwright install" download step entirely.
     container:
-      image: mcr.microsoft.com/playwright:v1.58.2-noble 
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm' # Caches node_modules based on package-lock.json
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci # Use 'ci' for faster, more reliable installs in GitHub Actions
+        run: npm ci
 
       - name: Update Fixtures
         run: python3 scripts/update_cypress_fixture.py
@@ -40,33 +36,29 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 30
+      # ── BUILD & OBFUSCATE ──
+      # Only runs if tests pass. This mangles the JS to hide answers.
+      - name: Minify and Obfuscate
+        if: github.ref == 'refs/heads/main'
+        run: |
+          npm install -g terser clean-css-cli
+          terser app.js --compress --mangle --output app.js
+          cleancss -o style.css style.css
 
-  # ── JOB 2: DEPLOY ──────────────────────────────────────────────────────────
-  deploy:
-    needs: test
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
+      - name: Upload Pages Artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
+  deploy:
+    needs: test_and_build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
