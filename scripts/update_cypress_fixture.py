@@ -10,7 +10,7 @@ Usage:
 
 import json, datetime, pathlib
 
-FIXTURE = pathlib.Path(__file__).parent.parent / "cypress" / "fixtures" / "birds.json"
+FIXTURE = pathlib.Path(__file__).parent.parent / "playwright" / "fixtures" / "birds.json"
 
 if not FIXTURE.exists():
     raise FileNotFoundError(f"Fixture not found: {FIXTURE}")
