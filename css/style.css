@@ -468,6 +468,108 @@ h1 {
 }
 #toast.show { transform: translateX(-50%) translateY(0); }
 
+
+/* ── TILES (Wordle-style letter scoring) ─────────────────────────────────── */
+.tiles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  align-items: center;
+  flex: 1;
+}
+
+.tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px; height: 26px;
+  border-radius: 4px;
+  font-size: .72rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0;
+  color: #fff;
+  flex-shrink: 0;
+}
+.tile-green  { background: var(--correct); }
+.tile-yellow { background: #b5883a; }
+.tile-grey   { background: rgba(122,61,74,.25); color: var(--ink2); }
+[data-theme="dark"] .tile-grey { background: rgba(255,255,255,.1); color: var(--ink2); }
+
+.tile-gap { display: inline-block; width: 8px; }
+
+/* ── HINT PANEL ──────────────────────────────────────────────────────────── */
+#hint-panel {
+  display: none;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 2px 12px var(--shadow);
+  transition: background .4s, border-color .4s;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hint-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.hint-letters {
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+}
+
+.hint-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 28px;
+  border-radius: 4px;
+  font-size: .8rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+}
+.hint-letter.green {
+  background: var(--correct);
+  color: #fff;
+}
+.hint-letter.blank {
+  color: var(--rose);
+  opacity: .5;
+  font-size: 1rem;
+  font-weight: 300;
+}
+
+.hint-gap { display: inline-block; width: 10px; }
+
+.hint-label {
+  font-size: .62rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--rose);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.hint-val {
+  font-size: .85rem;
+  color: var(--bark);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1rem;
+  transition: color .4s;
+}
+
+.hint-reveal {
+  animation: fadeUp .4s ease;
+}
 /* ── FOOTER ──────────────────────────────────────────────────────────────── */
 footer {
   width: 100%;
