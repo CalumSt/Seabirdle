@@ -302,7 +302,7 @@ function hiAC(its) { its.forEach((el, i) => el.classList.toggle('sel', i === S.a
 gInput.addEventListener('input', () => {
     const v = gInput.value.trim().toLowerCase(); S.acIdx = -1;
     if (!v) { acEl.style.display = 'none'; return; }
-    const hits = ALL_NAMES.filter(n => n.toLowerCase().includes(v));
+    const hits = ALL_NAMES.filter(n => n.toLowerCase().startsWith(v));
     if (!hits.length) { acEl.style.display = 'none'; return; }
     acEl.innerHTML = '';
     hits.slice(0, 8).forEach((name) => {
