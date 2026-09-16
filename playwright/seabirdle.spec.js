@@ -148,14 +148,14 @@ test('wrong guess row contains at least grey tiles', async ({ page }) => {
 // ── Autocomplete ──────────────────────────────────────────────────────────
 test('autocomplete appears when typing', async ({ page }) => {
   await page.goto('/');
-  await page.fill('#guess-input', 'puf');
+  await page.fill('#guess-input', 'atl');
   await expect(page.locator('#autocomplete')).toBeVisible();
   await expect(page.locator('.ac-item').first()).toBeVisible();
 });
 
 test('clicking autocomplete item fills input', async ({ page }) => {
   await page.goto('/');
-  await page.fill('#guess-input', 'puf');
+  await page.fill('#guess-input', 'atl');
   await page.locator('.ac-item').first().click();
   const val = await page.inputValue('#guess-input');
   expect(val.length).toBeGreaterThan(0);
